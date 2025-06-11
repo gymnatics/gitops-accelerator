@@ -1,55 +1,57 @@
 apiVersion: machine.openshift.io/v1beta1
 kind: MachineSet
 metadata:
-  name: test-machine
+  name: cluster-c5xdq-jn7bq-worker-us-east-2b-custom
   namespace: openshift-machine-api
 spec:
   replicas: 1
   selector:
     matchLabels:
       machine.openshift.io/cluster-api-cluster: cluster-c5xdq-jn7bq
-      machine.openshift.io/cluster-api-machineset: cluster-c5xdq-jn7bq-worker-us-east-2b
+      machine.openshift.io/cluster-api-machineset: cluster-c5xdq-jn7bq-worker-us-east-2b-custom
   template:
     metadata:
       labels:
         machine.openshift.io/cluster-api-cluster: cluster-c5xdq-jn7bq
         machine.openshift.io/cluster-api-machine-role: worker
         machine.openshift.io/cluster-api-machine-type: worker
-        machine.openshift.io/cluster-api-machineset: cluster-c5xdq-jn7bq-worker-us-east-2b
+        machine.openshift.io/cluster-api-machineset: cluster-c5xdq-jn7bq-worker-us-east-2b-custom
     spec:
-      lifecycleHooks: {}
-      metadata: {}
       providerSpec:
         value:
+          apiVersion: machine.openshift.io/v1beta1
+          kind: AWSMachineProviderConfig
+          instanceType: m5.xlarge
+          ami:
+            id: ami-022fbb77a3226215f
+          iamInstanceProfile:
+            id: cluster-c5xdq-jn7bq-worker-profile
+          credentialsSecret:
+            name: aws-cloud-credentials
           userDataSecret:
             name: worker-user-data
           placement:
-            availabilityZone: us-east-2b
             region: us-east-2
-          credentialsSecret:
-            name: aws-cloud-credentials
-          instanceType: m5.xlarge
-          metadata:
-            creationTimestamp: null
-          blockDevices:
-            - ebs:
-                encrypted: true
-                iops: 0
-                kmsKey:
-                  arn: ''
-                volumeSize: 100
-                volumeType: gp2
+            availabilityZone: us-east-2b
+          subnet:
+            filters:
+              - name: tag:Name
+                values:
+                  - cluster-c5xdq-jn7bq-subnet-private-us-east-2b
           securityGroups:
             - filters:
-                - name: 'tag:Name'
+                - name: tag:Name
                   values:
                     - cluster-c5xdq-jn7bq-node
             - filters:
-                - name: 'tag:Name'
+                - name: tag:Name
                   values:
                     - cluster-c5xdq-jn7bq-lb
-          kind: AWSMachineProviderConfig
-          metadataServiceOptions: {}
+          blockDevices:
+            - ebs:
+                volumeSize: 100
+                volumeType: gp2
+                encrypted: true
           tags:
             - name: kubernetes.io/cluster/cluster-c5xdq-jn7bq
               value: owned
@@ -65,14 +67,3 @@ spec:
               value: rhpds
             - name: uuid
               value: 0b2f98d9-2883-5894-a450-a1fd53a58720
-          deviceIndex: 0
-          ami:
-            id: ami-022fbb77a3226215f
-          subnet:
-            filters:
-              - name: 'tag:Name'
-                values:
-                  - cluster-c5xdq-jn7bq-subnet-private-us-east-2b
-          apiVersion: machine.openshift.io/v1beta1
-          iamInstanceProfile:
-            id: cluster-c5xdq-jn7bq-worker-profile
