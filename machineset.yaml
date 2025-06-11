@@ -1,23 +1,21 @@
 apiVersion: machine.openshift.io/v1beta1
 kind: MachineSet
 metadata:
-  name: cluster-c5xdq-jn7bq-worker-us-east-2b-test-machineset
+  name: cluster-c5xdq-jn7bq-worker-us-east-2b-custom
   namespace: openshift-machine-api
-  labels:
-    machine.openshift.io/cluster-api-cluster: cluster-c5xdq-jn7bq
 spec:
   replicas: 1
   selector:
     matchLabels:
       machine.openshift.io/cluster-api-cluster: cluster-c5xdq-jn7bq
-      machine.openshift.io/cluster-api-machineset: test-machineset
+      machine.openshift.io/cluster-api-machineset: cluster-c5xdq-jn7bq-worker-us-east-2b-custom
   template:
     metadata:
       labels:
         machine.openshift.io/cluster-api-cluster: cluster-c5xdq-jn7bq
         machine.openshift.io/cluster-api-machine-role: worker
         machine.openshift.io/cluster-api-machine-type: worker
-        machine.openshift.io/cluster-api-machineset: cluster-c5xdq-jn7bq-worker-us-east-2b-test-machineset
+        machine.openshift.io/cluster-api-machineset: cluster-c5xdq-jn7bq-worker-us-east-2b-custom
     spec:
       providerSpec:
         value:
@@ -57,3 +55,15 @@ spec:
           tags:
             - name: kubernetes.io/cluster/cluster-c5xdq-jn7bq
               value: owned
+            - name: Stack
+              value: ocp4-cluster-c5xdq
+            - name: env_type
+              value: ocp4-cluster
+            - name: guid
+              value: c5xdq
+            - name: owner
+              value: unknown
+            - name: platform
+              value: rhpds
+            - name: uuid
+              value: 0b2f98d9-2883-5894-a450-a1fd53a58720
