@@ -3,6 +3,8 @@ kind: MachineSet
 metadata:
   name: cluster-c5xdq-jn7bq-worker-us-east-2b-custom
   namespace: openshift-machine-api
+  annotations:
+    argocd.argoproj.io/sync-wave:"0"
 spec:
   replicas: 1
   selector:
@@ -21,7 +23,7 @@ spec:
         value:
           apiVersion: machine.openshift.io/v1beta1
           kind: AWSMachineProviderConfig
-          instanceType: m5.xlarge
+          instanceType: g5.2xlarge
           ami:
             id: ami-022fbb77a3226215f
           iamInstanceProfile:
